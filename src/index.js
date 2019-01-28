@@ -34,30 +34,33 @@ function calculateWinner(squares) {
 class Board extends React.Component {
     renderSquare(i) {
         return (
-            <Square
+            <Square key={i}
                 value={this.props.squares[i]}
-                onClick={() => this.props.onClick(i)}
-            />
+                onClick={() => this.props.onClick(i)}/>
         );
     }
+
     render() {
+        let rows = [];
+        let counter = 0;
+        for (let r = 0; r < 3; r++) {
+            rows.push([]);
+            for (let c = 0; c < 3; c++) {
+                rows[r].push(this.renderSquare(counter));
+                counter++;
+            };
+        }
+
+        let board = rows.map((r, idx) => {
+            return (
+                <div className="board-row" key={idx}>
+                    {r}
+                </div>
+            )})
+
         return (
-            <div>
-                <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                </div>
+            <div className="board">
+                {board}
             </div>
         );
     }
@@ -98,6 +101,7 @@ class Game extends React.Component {
             xIsNext: (step % 2) === 0,
         });
     }
+    
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
