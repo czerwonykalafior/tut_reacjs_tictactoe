@@ -72,6 +72,7 @@ class Game extends React.Component {
         this.state = {
             history: [{
                 squares: Array(9).fill(null),
+                move_loc: null
             }],
             stepNumber: 0,
             xIsNext: true,
@@ -86,9 +87,12 @@ class Game extends React.Component {
             return;
         }
         squares[i] = this.state.xIsNext ? 'X' : 'O';
+        const loc_x = Math.floor(i/3);
+        const loc_y = i%3;
         this.setState({
             history: history.concat([{
                 squares: squares,
+                move_loc: '' + loc_x + ', ' + loc_y,
             }]),
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext,
@@ -101,7 +105,7 @@ class Game extends React.Component {
             xIsNext: (step % 2) === 0,
         });
     }
-    
+
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
@@ -109,11 +113,11 @@ class Game extends React.Component {
 
         const moves = history.map((step, move) => {
             const desc = move ?
-                'Go to move #' + move :
+                'Go to move #' + move + ' ' + step.move_loc :
                 'Go to game start';
             return (
                 <li key={move}>
-                    <button onClick={() => this.jumpTo(move)}>{desc}</button>
+                    <button onClick={() => this.jumpTo(move)}> {desc}</button>
                 </li>
             )
         });
@@ -148,3 +152,23 @@ ReactDOM.render(
     <Game />,
     document.getElementById('root')
 );
+
+
+// Display the location for each move in the format (col, row) in the move history list.
+
+// n = x, y
+// 0 = 0, 0
+// 1 = 0, 1
+// 2 = 0, 2
+
+// 3 = 1, 0
+// 4 = 1, 1
+// 5 = 1, 2
+
+// 6 = 2, 0
+// 7 = 2, 1
+// 8 = 2, 2
+
+
+// x = n//3
+// y = n%3
